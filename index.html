@@ -5,315 +5,373 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Personal Newsletter</title>
   <style>
-    /* Basic page styling for readability */
     :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --border: #dbe3ef;
+      --bg: #eef2f7;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #1d4ed8;
+      --border: #dbe5f1;
+      --shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
     }
 
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
       color: var(--text);
-      background: var(--bg);
+      background: linear-gradient(180deg, #e9f0fb 0%, var(--bg) 45%, #f4f7fb 100%);
       line-height: 1.5;
     }
 
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 1rem; }
+
     header {
-      background: #0f172a;
-      color: #fff;
-      padding: 1.25rem;
+      background: radial-gradient(circle at top left, #1e3a8a, #0f172a 65%);
+      color: white;
+      padding: 1.25rem 0 1.1rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 5;
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 1.4rem;
-    }
+    h1 { margin: 0; font-size: 1.4rem; }
+    header p { margin: .4rem 0 0; color: #dbeafe; font-size: .95rem; }
 
-    header p {
-      margin: 0.35rem 0 0;
-      color: #cbd5e1;
-      font-size: 0.95rem;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      margin-top: 0.75rem;
-      flex-wrap: wrap;
-    }
-
+    .toolbar { display: flex; gap: .7rem; align-items: center; margin-top: .8rem; flex-wrap: wrap; }
     button {
       background: var(--accent);
       color: white;
       border: none;
-      border-radius: 8px;
-      padding: 0.55rem 0.9rem;
+      border-radius: 10px;
+      padding: .6rem .95rem;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 0.95rem;
     }
+    button:hover { background: #1e40af; }
+    #status { color: #dbeafe; font-size: .88rem; }
 
-    button:hover { background: #1d4ed8; }
-
-    #status {
-      color: #e2e8f0;
-      font-size: 0.9rem;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: 1rem auto 2rem;
-      padding: 0 1rem;
-    }
-
+    main { padding: 1rem 0 2rem; }
     section {
-      margin-bottom: 1rem;
-      background: var(--card);
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 1rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
     }
 
     section h2 {
-      margin-top: 0;
+      margin: 0 0 .55rem;
+      font-size: 1.1rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 0.4rem;
+      padding-bottom: .45rem;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.85rem;
-    }
+    .section-note { margin: 0 0 .75rem; color: var(--muted); font-size: .9rem; }
 
+    .grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
     .card {
       border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #fcfdff;
-      padding: 0.8rem;
+      border-radius: 12px;
+      background: var(--surface-2);
+      padding: .85rem;
     }
+    .card h3 { margin: 0 0 .45rem; font-size: 1rem; }
 
-    .card h3 {
-      margin: 0 0 0.45rem;
-      font-size: 1rem;
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 1.15rem;
-    }
-
-    li { margin-bottom: 0.35rem; }
-
-    a {
-      color: #1d4ed8;
-      text-decoration: none;
-    }
-
+    ul { margin: 0; padding-left: 1.15rem; }
+    li { margin-bottom: .65rem; }
+    a { color: #1e40af; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    .muted {
-      font-size: 0.9rem;
-      color: var(--muted);
+    .muted { color: var(--muted); font-size: .9rem; }
+    .meta { display: block; color: #334155; font-size: .78rem; margin-top: .2rem; }
+    .tag {
+      display: inline-block;
+      background: #e0eaff;
+      border: 1px solid #c7d7ff;
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .06rem .44rem;
+      margin-right: .35rem;
     }
 
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 0.9rem;
+    .spotlight-header {
+      display: flex;
+      justify-content: space-between;
+      gap: .5rem;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
+    .badge {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      border-radius: 999px;
+      padding: .12rem .55rem;
+      font-size: .75rem;
+      font-weight: 700;
+    }
+
+    .photo-grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
     figure {
       margin: 0;
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
       overflow: hidden;
       background: #fff;
     }
-
     figure img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
       display: block;
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #e2e8f0;
     }
+    figcaption { padding: .7rem; font-size: .9rem; }
 
-    figcaption {
-      padding: 0.65rem;
-      font-size: 0.92rem;
-    }
+    footer { text-align: center; color: var(--muted); font-size: .82rem; padding-bottom: 1.2rem; }
   </style>
 </head>
 <body>
   <header>
-    <h1>My Personal Newsletter</h1>
-    <p>Top discussions in baseball, business, job search, and cool finds.</p>
-    <div class="toolbar">
-      <button id="refreshBtn">Refresh Headlines</button>
-      <span id="status">Loading...</span>
+    <div class="container">
+      <h1>My Personal Newsletter</h1>
+      <p>Top discussions in baseball, job search, and business (only headlines from the past 3 days).</p>
+      <div class="toolbar">
+        <button id="refreshBtn">Refresh Headlines</button>
+        <span id="status">Loading...</span>
+      </div>
     </div>
   </header>
 
-  <main>
-    <!-- Section 1: Baseball news divided into four leagues -->
+  <main class="container">
     <section>
       <h2>Baseball</h2>
+      <p class="section-note">Four league views. Each list merges multiple websites and keeps only the top 3 most recent items.</p>
       <div class="grid">
-        <article class="card">
-          <h3>MLB</h3>
-          <ul id="mlbList"><li class="muted">Loading MLB headlines...</li></ul>
-        </article>
-        <article class="card">
-          <h3>NPB</h3>
-          <ul id="npbList"><li class="muted">Loading NPB headlines...</li></ul>
-        </article>
-        <article class="card">
-          <h3>KBO</h3>
-          <ul id="kboList"><li class="muted">Loading KBO headlines...</li></ul>
-        </article>
-        <article class="card">
-          <h3>CPBL</h3>
-          <ul id="cpblList"><li class="muted">Loading CPBL headlines...</li></ul>
-        </article>
+        <article class="card"><h3>MLB</h3><ul id="mlbList"><li class="muted">Loading MLB headlines...</li></ul></article>
+        <article class="card"><h3>NPB</h3><ul id="npbList"><li class="muted">Loading NPB headlines...</li></ul></article>
+        <article class="card"><h3>KBO</h3><ul id="kboList"><li class="muted">Loading KBO headlines...</li></ul></article>
+        <article class="card"><h3>CPBL</h3><ul id="cpblList"><li class="muted">Loading CPBL headlines...</li></ul></article>
       </div>
     </section>
 
-    <!-- Section 2: Job Search topic with top discussion headlines -->
     <section>
       <h2>Job Search</h2>
       <div class="grid">
-        <article class="card">
-          <h3>Top Job Market Headlines</h3>
-          <ul id="jobSearchList"><li class="muted">Loading job-search headlines...</li></ul>
-        </article>
+        <article class="card"><h3>Top Job Market Headlines</h3><ul id="jobSearchList"><li class="muted">Loading job-search headlines...</li></ul></article>
       </div>
     </section>
 
-    <!-- Section 3: Business section with requested three parts -->
     <section>
       <h2>Business</h2>
       <div class="grid">
-        <article class="card">
-          <h3>Sports Business News</h3>
-          <ul id="sportsBizList"><li class="muted">Loading sports business headlines...</li></ul>
-        </article>
-        <article class="card">
-          <h3>General Business News</h3>
-          <ul id="businessList"><li class="muted">Loading general business headlines...</li></ul>
-        </article>
-        <article class="card">
-          <h3>Company Spotlight: TKO Group Holdings</h3>
-          <p><strong>What they do:</strong> TKO owns UFC and WWE, creating live sports and entertainment events, TV shows, and premium streaming content.</p>
-          <p><strong>Main services:</strong> Fight cards, pro wrestling events, media rights programming, global licensing, sponsorships, and ticketed live events.</p>
-          <p><strong>Main revenue sources:</strong> Media rights deals, live event ticket sales, sponsorship/advertising, and consumer products.</p>
-          <p class="muted">Tip: You can swap this section to another sports or entertainment company later.</p>
+        <article class="card"><h3>Sports Business News</h3><ul id="sportsBizList"><li class="muted">Loading sports business headlines...</li></ul></article>
+        <article class="card"><h3>General Business News</h3><ul id="businessList"><li class="muted">Loading general business headlines...</li></ul></article>
+        <article class="card" id="spotlightCard">
+          <div class="spotlight-header">
+            <h3 id="spotlightName">Company Spotlight</h3>
+            <span class="badge">Daily Rotation</span>
+          </div>
+          <p id="spotlightIntro" class="muted"></p>
+          <p><strong>Main services:</strong> <span id="spotlightServices"></span></p>
+          <p><strong>Main revenue source:</strong> <span id="spotlightRevenue"></span></p>
+          <p class="muted" id="spotlightSource"></p>
         </article>
       </div>
     </section>
 
-    <!-- Section 4: Cool find of the day with three static image highlights -->
     <section>
       <h2>Cool Find of the Day</h2>
-      <p class="muted">These are notable baseball-related finds with discussion value online.</p>
+      <p class="section-note">Three baseball-related finds with real online image links.</p>
       <div class="photo-grid">
         <figure>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Shohei_Ohtani_batting_2024.jpg" alt="Shohei Ohtani batting" />
-          <figcaption><strong>Global star spotlight:</strong> Shohei Ohtani clips are still heavily shared for elite two-way legacy discussions.</figcaption>
+          <img src="https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=1200&q=80" alt="Baseball player batting in stadium" loading="lazy" referrerpolicy="no-referrer" />
+          <figcaption><strong>Clutch moment clips:</strong> Big-game swings and game-saving plays are dominating fan discussion threads.</figcaption>
         </figure>
         <figure>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Baseball_glove.jpg" alt="Modern baseball glove" />
-          <figcaption><strong>Gear trend:</strong> New glove web patterns and custom pocket depths are a frequent debate among players and fans.</figcaption>
+          <img src="https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=80" alt="Baseball glove and ball on grass" loading="lazy" referrerpolicy="no-referrer" />
+          <figcaption><strong>Glove design buzz:</strong> New web styles, lighter leather, and custom pocket depth remain a popular gear conversation.</figcaption>
         </figure>
         <figure>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/World_Baseball_Classic_2023.jpg" alt="World Baseball Classic game" />
-          <figcaption><strong>Viral play conversations:</strong> International tournament moments keep resurfacing as benchmark highlights.</figcaption>
+          <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80" alt="Crowded baseball stadium atmosphere" loading="lazy" referrerpolicy="no-referrer" />
+          <figcaption><strong>League atmosphere trend:</strong> International baseball crowd scenes and rivalry clips are widely shared.</figcaption>
         </figure>
       </div>
     </section>
   </main>
 
+  <footer>
+    This page uses RSS headlines via a browser-safe proxy and only keeps items from the last 3 days.
+  </footer>
+
   <script>
-    // Helper: Build a CORS-friendly URL from an RSS feed using allorigins.
+    // Build a proxy URL for RSS feeds so browser fetch works with CORS restrictions.
     function makeRssJsonUrl(rssUrl) {
       return `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
     }
 
-    // Helper: Fetch RSS data, parse XML from text, and return top 3 items.
-    async function fetchTopThreeFromRss(rssUrl) {
+    // Return true when a publish date is within the last 3 days.
+    function isWithinLastThreeDays(dateString) {
+      const date = new Date(dateString);
+      if (Number.isNaN(date.getTime())) return false;
+      const now = new Date();
+      const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+      return date >= threeDaysAgo && date <= now;
+    }
+
+    // Fetch one RSS feed and normalize item fields.
+    async function fetchFeedItems(rssUrl, sourceLabel) {
       const response = await fetch(makeRssJsonUrl(rssUrl));
-      if (!response.ok) throw new Error('Unable to fetch RSS proxy data.');
+      if (!response.ok) throw new Error(`Failed to fetch ${sourceLabel}`);
 
       const data = await response.json();
-      const xmlText = data.contents;
-      const xmlDoc = new DOMParser().parseFromString(xmlText, 'text/xml');
-      const items = [...xmlDoc.querySelectorAll('item')].slice(0, 3);
-
-      return items.map(item => ({
-        title: item.querySelector('title')?.textContent || 'Untitled',
-        link: item.querySelector('link')?.textContent || '#'
+      const xmlDoc = new DOMParser().parseFromString(data.contents, 'text/xml');
+      return [...xmlDoc.querySelectorAll('item')].map(item => ({
+        title: item.querySelector('title')?.textContent?.trim() || 'Untitled',
+        link: item.querySelector('link')?.textContent?.trim() || '#',
+        pubDate: item.querySelector('pubDate')?.textContent?.trim() || '',
+        source: sourceLabel
       }));
     }
 
-    // Helper: Render a list of headlines to a target UL element.
+    // Render headlines into a list.
     function renderHeadlines(listId, headlines) {
       const ul = document.getElementById(listId);
       ul.innerHTML = '';
 
       if (!headlines.length) {
-        ul.innerHTML = '<li class="muted">No headlines available right now.</li>';
+        ul.innerHTML = '<li class="muted">No recent headlines in the past 3 days.</li>';
         return;
       }
 
       headlines.forEach(item => {
         const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = item.link;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.textContent = item.title;
-        li.appendChild(a);
+        const link = document.createElement('a');
+        link.href = item.link;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = item.title;
+
+        const meta = document.createElement('span');
+        meta.className = 'meta';
+        const dateText = item.pubDate ? new Date(item.pubDate).toLocaleString() : 'No publish date';
+        meta.innerHTML = `<span class="tag">${item.source}</span>${dateText}`;
+
+        li.appendChild(link);
+        li.appendChild(meta);
         ul.appendChild(li);
       });
     }
 
-    // Feed map: you can change the query terms if you want different results.
+    // Daily rotating company spotlight data.
+    const spotlightCompanies = [
+      {
+        name: 'TKO Group Holdings',
+        intro: 'TKO operates UFC and WWE and builds global live sports-entertainment franchises.',
+        services: 'Live events, premium media programming, licensing, sponsorships, consumer products.',
+        revenue: 'Media rights is typically the largest segment, followed by live events and sponsorships.',
+        source: 'Source ideas: company investor relations pages, SEC filings, Reuters company profiles.'
+      },
+      {
+        name: 'Live Nation Entertainment',
+        intro: 'Live Nation is a major live entertainment company focused on concerts and ticketing.',
+        services: 'Concert promotion, venue operations, festival management, and Ticketmaster ticketing technology.',
+        revenue: 'Concert-related income and ticketing service fees are core revenue drivers.',
+        source: 'Source ideas: Live Nation investor site, annual reports, major financial news outlets.'
+      },
+      {
+        name: 'Endeavor Group Holdings',
+        intro: 'Endeavor is a sports and entertainment company with talent representation and event/media businesses.',
+        services: 'Talent management, sports rights services, events, and brand partnerships.',
+        revenue: 'Representation commissions, event/media economics, and marketing partnerships.',
+        source: 'Source ideas: Endeavor filings, investor presentations, Reuters and WSJ coverage.'
+      }
+    ];
+
+    function renderDailySpotlight() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 0);
+      const dayOfYear = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+      const company = spotlightCompanies[dayOfYear % spotlightCompanies.length];
+
+      document.getElementById('spotlightName').textContent = `Company Spotlight: ${company.name}`;
+      document.getElementById('spotlightIntro').textContent = company.intro;
+      document.getElementById('spotlightServices').textContent = company.services;
+      document.getElementById('spotlightRevenue').textContent = company.revenue;
+      document.getElementById('spotlightSource').textContent = company.source;
+    }
+
+    // Use more than one website/feed per topic.
     const feeds = {
-      mlbList: 'https://news.google.com/rss/search?q=MLB&hl=en-US&gl=US&ceid=US:en',
-      npbList: 'https://news.google.com/rss/search?q=NPB+baseball&hl=en-US&gl=US&ceid=US:en',
-      kboList: 'https://news.google.com/rss/search?q=KBO+League&hl=en-US&gl=US&ceid=US:en',
-      cpblList: 'https://news.google.com/rss/search?q=CPBL+baseball&hl=en-US&gl=US&ceid=US:en',
-      jobSearchList: 'https://news.google.com/rss/search?q=job+search+career+advice&hl=en-US&gl=US&ceid=US:en',
-      sportsBizList: 'https://news.google.com/rss/search?q=sports+business&hl=en-US&gl=US&ceid=US:en',
-      businessList: 'https://news.google.com/rss/search?q=general+business+news&hl=en-US&gl=US&ceid=US:en'
+      mlbList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=MLB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'ESPN MLB', url: 'https://www.espn.com/espn/rss/mlb/news' }
+      ],
+      npbList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=NPB+baseball&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Google JP', url: 'https://news.google.com/rss/search?q=NPB+baseball+japan&hl=en-US&gl=US&ceid=US:en' }
+      ],
+      kboList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=KBO+League&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Google KR', url: 'https://news.google.com/rss/search?q=KBO+baseball+korea&hl=en-US&gl=US&ceid=US:en' }
+      ],
+      cpblList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=CPBL+baseball&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Google TW', url: 'https://news.google.com/rss/search?q=CPBL+taiwan+league&hl=en-US&gl=US&ceid=US:en' }
+      ],
+      jobSearchList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=job+search+career+advice&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Google LinkedIn', url: 'https://news.google.com/rss/search?q=LinkedIn+job+market&hl=en-US&gl=US&ceid=US:en' }
+      ],
+      sportsBizList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=sports+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Google Sportico', url: 'https://news.google.com/rss/search?q=Sportico+sports+business&hl=en-US&gl=US&ceid=US:en' }
+      ],
+      businessList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=general+business+news&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Reuters', url: 'https://feeds.reuters.com/reuters/businessNews' }
+      ]
     };
 
-    // Main refresh function called on page load and button click.
     async function refreshAllHeadlines() {
       const status = document.getElementById('status');
       status.textContent = 'Refreshing headlines...';
 
-      const jobs = Object.entries(feeds).map(async ([listId, url]) => {
+      const jobs = Object.entries(feeds).map(async ([listId, sourceList]) => {
         try {
-          const headlines = await fetchTopThreeFromRss(url);
-          renderHeadlines(listId, headlines);
+          const grouped = await Promise.all(sourceList.map(s => fetchFeedItems(s.url, s.label)));
+          const merged = grouped.flat();
+
+          const seen = new Set();
+          const filtered = [];
+          for (const item of merged) {
+            const key = `${item.title}|${item.link}`;
+            if (!seen.has(key) && isWithinLastThreeDays(item.pubDate)) {
+              seen.add(key);
+              filtered.push(item);
+            }
+          }
+
+          filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+          renderHeadlines(listId, filtered.slice(0, 3));
         } catch (error) {
+          console.error(`Feed error for ${listId}:`, error);
           renderHeadlines(listId, []);
-          console.error(`Failed for ${listId}:`, error);
         }
       });
 
       await Promise.all(jobs);
-      status.textContent = `Last updated: ${new Date().toLocaleString()}`;
+      status.textContent = `Last updated: ${new Date().toLocaleString()} (past 3 days only)`;
     }
 
     document.getElementById('refreshBtn').addEventListener('click', refreshAllHeadlines);
-
-    // Load headlines immediately when page opens.
+    renderDailySpotlight();
     refreshAllHeadlines();
   </script>
 </body>
