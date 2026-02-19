@@ -161,8 +161,11 @@
   </footer>
 
   <script>
-    function makeRssJsonUrl(rssUrl) {
-      return `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+    function makeProxyUrls(rssUrl) {
+      return [
+        `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`,
+        `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(rssUrl)}`
+      ];
     }
 
     function isWithinLastSevenDays(dateString) {
@@ -174,25 +177,49 @@
     }
 
     async function fetchFeedItems(rssUrl, sourceLabel) {
-      const response = await fetch(makeRssJsonUrl(rssUrl));
-      if (!response.ok) throw new Error(`Failed to fetch ${sourceLabel}`);
-      const data = await response.json();
-      const xml = new DOMParser().parseFromString(data.contents, 'text/xml');
-      return [...xml.querySelectorAll('item')].map(item => ({
-        title: item.querySelector('title')?.textContent?.trim() || 'Untitled',
-        link: item.querySelector('link')?.textContent?.trim() || '#',
-        pubDate: item.querySelector('pubDate')?.textContent?.trim() || '',
-        source: sourceLabel
-      }));
+      const proxies = makeProxyUrls(rssUrl);
+      let lastError = null;
+
+      for (const proxyUrl of proxies) {
+        try {
+          const response = await fetch(proxyUrl);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+          let xmlText = '';
+          if (proxyUrl.includes('allorigins')) {
+            const data = await response.json();
+            xmlText = data.contents || '';
+          } else {
+            xmlText = await response.text();
+          }
+
+          if (!xmlText.trim()) throw new Error('Empty feed payload');
+
+          const xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+          const items = [...xml.querySelectorAll('item')].map(item => ({
+            title: item.querySelector('title')?.textContent?.trim() || 'Untitled',
+            link: item.querySelector('link')?.textContent?.trim() || '#',
+            pubDate: item.querySelector('pubDate')?.textContent?.trim() || '',
+            source: sourceLabel
+          }));
+
+          if (items.length) return items;
+        } catch (error) {
+          lastError = error;
+        }
+      }
+
+      throw new Error(`Failed to fetch ${sourceLabel}: ${lastError ? lastError.message : 'unknown error'}`);
     }
 
     function renderHeadlines(listId, headlines) {
       const ul = document.getElementById(listId);
       ul.innerHTML = '';
       if (!headlines.length) {
-        ul.innerHTML = '<li class="muted">No recent headlines in the past 7 days.</li>';
+        ul.innerHTML = '<li class="muted">No recent headlines available right now. Try Refresh in a moment.</li>';
         return;
       }
+
       headlines.forEach(item => {
         const li = document.createElement('li');
         const a = document.createElement('a');
@@ -202,50 +229,51 @@
         a.textContent = item.title;
         const m = document.createElement('span');
         m.className = 'meta';
-        m.innerHTML = `<span class="tag">${item.source}</span>${item.pubDate ? new Date(item.pubDate).toLocaleString() : 'No publish date'}`;
+        const d = item.pubDate ? new Date(item.pubDate).toLocaleString() : 'Date not provided';
+        m.innerHTML = `<span class="tag">${item.source}</span>${d}`;
         li.appendChild(a);
         li.appendChild(m);
         ul.appendChild(li);
       });
     }
 
-    const spotlightCompanies = [
-      {
-        name: 'TKO Group Holdings',
-        intro: 'TKO operates UFC and WWE and builds global live sports-entertainment franchises.',
-        services: 'Live events, premium media programming, licensing, sponsorships, and consumer products.',
-        revenue: 'Media rights is typically the largest segment, followed by live events and sponsorships.',
-        source: 'Source ideas: company investor pages, SEC filings, Reuters profiles.'
-      },
-      {
-        name: 'Live Nation Entertainment',
-        intro: 'Live Nation is a major live entertainment company focused on concerts and ticketing.',
-        services: 'Concert promotion, venues, festivals, and Ticketmaster ticketing technology.',
-        revenue: 'Concert income and ticketing service fees are core revenue drivers.',
-        source: 'Source ideas: investor site, annual reports, major financial outlets.'
-      },
-      {
-        name: 'Endeavor Group Holdings',
-        intro: 'Endeavor is a sports and entertainment company with representation and event/media businesses.',
-        services: 'Talent management, sports rights services, events, and partnerships.',
-        revenue: 'Representation commissions, event/media economics, and partnerships.',
-        source: 'Source ideas: filings, investor presentations, Reuters and WSJ coverage.'
-      }
-    ];
-
-    function dayOfYear() {
-      const now = new Date();
-      const start = new Date(now.getFullYear(), 0, 0);
-      return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    async function fetchCompanySummaryOnline(companyName) {
+      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(companyName)}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Company summary fetch failed');
+      const data = await response.json();
+      return {
+        name: data.title || companyName,
+        intro: data.extract || 'No summary available right now.',
+        source: data.content_urls?.desktop?.page || 'https://www.wikipedia.org/'
+      };
     }
 
-    function renderDailySpotlight() {
-      const c = spotlightCompanies[dayOfYear() % spotlightCompanies.length];
-      document.getElementById('spotlightName').textContent = `Company Spotlight: ${c.name}`;
-      document.getElementById('spotlightIntro').textContent = c.intro;
-      document.getElementById('spotlightServices').textContent = c.services;
-      document.getElementById('spotlightRevenue').textContent = c.revenue;
-      document.getElementById('spotlightSource').textContent = c.source;
+    const companyCandidates = [
+      'TKO Group Holdings', 'Live Nation Entertainment', 'Endeavor Group Holdings', 'Madison Square Garden Sports',
+      'Rogers Communications', 'Walt Disney Company', 'Comcast', 'Paramount Global', 'Warner Bros. Discovery',
+      'Nintendo', 'Sony Group', 'Kakao Entertainment', 'Tencent', 'ByteDance', 'Naver', 'Krafton', 'Bandai Namco',
+      'Take-Two Interactive', 'Electronic Arts', 'Netflix', 'Wynn Resorts', 'Caesars Entertainment', 'Liberty Media'
+    ];
+
+    async function renderDailySpotlight() {
+      const index = Math.floor(Date.now() / 86400000) % companyCandidates.length;
+      const companyName = companyCandidates[index];
+
+      try {
+        const summary = await fetchCompanySummaryOnline(companyName);
+        document.getElementById('spotlightName').textContent = `Company Spotlight: ${summary.name}`;
+        document.getElementById('spotlightIntro').textContent = summary.intro;
+        document.getElementById('spotlightServices').textContent = 'See linked profile for current products, services, and segments.';
+        document.getElementById('spotlightRevenue').textContent = 'Use latest annual report / investor relations for up-to-date revenue mix.';
+        document.getElementById('spotlightSource').innerHTML = `Online source: <a href="${summary.source}" target="_blank" rel="noopener noreferrer">${summary.source}</a>`;
+      } catch (error) {
+        document.getElementById('spotlightName').textContent = `Company Spotlight: ${companyName}`;
+        document.getElementById('spotlightIntro').textContent = 'Unable to load live company profile right now. Please refresh again shortly.';
+        document.getElementById('spotlightServices').textContent = 'N/A';
+        document.getElementById('spotlightRevenue').textContent = 'N/A';
+        document.getElementById('spotlightSource').textContent = 'Live lookup temporarily unavailable.';
+      }
     }
 
     const feeds = {
@@ -255,7 +283,7 @@
         { label: 'CBS Sports MLB', url: 'https://news.google.com/rss/search?q=site:cbssports.com+MLB&hl=en-US&gl=US&ceid=US:en' },
         { label: 'Yahoo Sports MLB', url: 'https://news.google.com/rss/search?q=site:sports.yahoo.com+MLB&hl=en-US&gl=US&ceid=US:en' },
         { label: 'The Athletic MLB', url: 'https://news.google.com/rss/search?q=site:theathletic.com+MLB&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'AP MLB', url: 'https://news.google.com/rss/search?q=site:apnews.com+MLB&hl=en-US&gl=US&ceid=US:en' }
+        { label: 'MLB.com', url: 'https://www.mlb.com/feeds/news/rss.xml' }
       ],
       npbList: [
         { label: 'Google News', url: 'https://news.google.com/rss/search?q=NPB+baseball&hl=en-US&gl=US&ceid=US:en' },
@@ -283,8 +311,8 @@
         { label: 'LinkedIn Jobs', url: 'https://news.google.com/rss/search?q=site:linkedin.com+jobs+career&hl=en-US&gl=US&ceid=US:en' },
         { label: 'Indeed Career', url: 'https://news.google.com/rss/search?q=site:indeed.com+career+advice&hl=en-US&gl=US&ceid=US:en' },
         { label: 'Glassdoor Blog', url: 'https://news.google.com/rss/search?q=site:glassdoor.com+career+advice&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'SHRM Jobs', url: 'https://news.google.com/rss/search?q=site:shrm.org+job+market&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'Reddit CareerGuidance', url: 'https://www.reddit.com/r/careerguidance/.rss' }
+        { label: 'Monster Career', url: 'https://news.google.com/rss/search?q=site:monster.com+career+advice&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'SHRM Jobs', url: 'https://news.google.com/rss/search?q=site:shrm.org+job+market&hl=en-US&gl=US&ceid=US:en' }
       ],
       sportsBizList: [
         { label: 'Google News', url: 'https://news.google.com/rss/search?q=sports+business&hl=en-US&gl=US&ceid=US:en' },
@@ -311,28 +339,36 @@
     async function refreshAllHeadlines() {
       const status = document.getElementById('status');
       status.textContent = 'Refreshing headlines...';
+
       const jobs = Object.entries(feeds).map(async ([listId, sourceList]) => {
-        try {
-          const grouped = await Promise.all(sourceList.map(s => fetchFeedItems(s.url, s.label)));
-          const merged = grouped.flat();
-          const seen = new Set();
-          const filtered = [];
-          for (const item of merged) {
-            const key = `${item.title}|${item.link}`;
-            if (!seen.has(key) && isWithinLastSevenDays(item.pubDate)) {
-              seen.add(key);
-              filtered.push(item);
-            }
+        const settled = await Promise.allSettled(sourceList.map(s => fetchFeedItems(s.url, s.label)));
+        const merged = settled
+          .filter(r => r.status === 'fulfilled')
+          .flatMap(r => r.value);
+
+        const seen = new Set();
+        const recent = [];
+        const fallbackNoDate = [];
+
+        for (const item of merged) {
+          const key = `${item.title}|${item.link}`;
+          if (seen.has(key)) continue;
+          seen.add(key);
+
+          if (item.pubDate && isWithinLastSevenDays(item.pubDate)) {
+            recent.push(item);
+          } else if (!item.pubDate) {
+            fallbackNoDate.push(item);
           }
-          filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-          renderHeadlines(listId, filtered.slice(0, 3));
-        } catch (error) {
-          console.error(`Feed error for ${listId}:`, error);
-          renderHeadlines(listId, []);
         }
+
+        recent.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        const combined = [...recent, ...fallbackNoDate].slice(0, 3);
+        renderHeadlines(listId, combined);
       });
+
       await Promise.all(jobs);
-      status.textContent = `Last updated: ${new Date().toLocaleString()} (past 7 days only, daily refresh enabled)`;
+      status.textContent = `Last updated: ${new Date().toLocaleString()} (past 7 days, live multi-source search)`;
     }
 
     function scheduleDailyRefresh() {
@@ -349,9 +385,9 @@
       }, next - now);
     }
 
-    document.getElementById('refreshBtn').addEventListener('click', () => {
-      renderDailySpotlight();
-      refreshAllHeadlines();
+    document.getElementById('refreshBtn').addEventListener('click', async () => {
+      await renderDailySpotlight();
+      await refreshAllHeadlines();
     });
 
     renderDailySpotlight();
