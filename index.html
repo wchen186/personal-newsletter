@@ -5,36 +5,123 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Personal Newsletter</title>
   <style>
-    :root { --bg:#eef2f7; --surface:#fff; --surface2:#f8fafc; --text:#0f172a; --muted:#64748b; --accent:#1d4ed8; --border:#dbe5f1; --shadow:0 8px 22px rgba(15,23,42,.06); }
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;color:var(--text);background:linear-gradient(180deg,#e9f0fb 0%,var(--bg) 45%,#f4f7fb 100%);line-height:1.5}
-    .container{max-width:1180px;margin:0 auto;padding:0 1rem}
-    header{background:radial-gradient(circle at top left,#1e3a8a,#0f172a 65%);color:#fff;padding:1.25rem 0 1.1rem;box-shadow:var(--shadow);position:sticky;top:0;z-index:5}
-    h1{margin:0;font-size:1.4rem} header p{margin:.4rem 0 0;color:#dbeafe;font-size:.95rem}
-    .toolbar{display:flex;gap:.7rem;align-items:center;margin-top:.8rem;flex-wrap:wrap}
-    button{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:.6rem .95rem;font-weight:600;cursor:pointer} button:hover{background:#1e40af} #status{color:#dbeafe;font-size:.88rem}
-    main{padding:1rem 0 2rem} section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;box-shadow:var(--shadow);margin-bottom:1rem}
-    section h2{margin:0 0 .55rem;font-size:1.1rem;border-bottom:1px solid var(--border);padding-bottom:.45rem}
-    .section-note{margin:0 0 .75rem;color:var(--muted);font-size:.9rem}
-    .grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-    .card{border:1px solid var(--border);border-radius:12px;background:var(--surface2);padding:.85rem}.card h3{margin:0 0 .45rem;font-size:1rem}
-    ul{margin:0;padding-left:1.15rem} li{margin-bottom:.65rem} a{color:#1e40af;text-decoration:none} a:hover{text-decoration:underline}
-    .muted{color:var(--muted);font-size:.9rem} .meta{display:block;color:#334155;font-size:.78rem;margin-top:.2rem}
-    .tag{display:inline-block;background:#e0eaff;border:1px solid #c7d7ff;border-radius:999px;font-size:.72rem;font-weight:600;padding:.06rem .44rem;margin-right:.35rem}
-    .spotlight-header{display:flex;justify-content:space-between;gap:.5rem;align-items:center;flex-wrap:wrap}
-    .badge{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;border-radius:999px;padding:.12rem .55rem;font-size:.75rem;font-weight:700}
-    .photo-grid{display:grid;gap:.9rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    figure{margin:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff}
-    figure img{display:block;width:100%;height:220px;object-fit:cover;background:#e2e8f0} figcaption{padding:.7rem;font-size:.9rem}
-    footer{text-align:center;color:var(--muted);font-size:.82rem;padding-bottom:1.2rem}
+    :root {
+      --bg: #eef2f7;
+      --surface: #fff;
+      --surface2: #f8fafc;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #1d4ed8;
+      --border: #dbe5f1;
+      --shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #e9f0fb 0%, var(--bg) 45%, #f4f7fb 100%);
+      line-height: 1.5;
+    }
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 1rem; }
+    header {
+      background: radial-gradient(circle at top left, #1e3a8a, #0f172a 65%);
+      color: #fff;
+      padding: 1.25rem 0 1.1rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    h1 { margin: 0; font-size: 1.4rem; }
+    header p { margin: 0.4rem 0 0; color: #dbeafe; font-size: 0.95rem; }
+    .toolbar { display: flex; gap: 0.7rem; align-items: center; margin-top: 0.8rem; flex-wrap: wrap; }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.6rem 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #1e40af; }
+    #status { color: #dbeafe; font-size: 0.88rem; }
+    main { padding: 1rem 0 2rem; }
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+    section h2 {
+      margin: 0 0 0.55rem;
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.45rem;
+    }
+    .section-note { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.9rem; }
+    .grid { display: grid; gap: 0.9rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface2);
+      padding: 0.85rem;
+    }
+    .card h3 { margin: 0 0 0.45rem; font-size: 1rem; }
+    ul { margin: 0; padding-left: 1.15rem; }
+    li { margin-bottom: 0.65rem; }
+    a { color: #1e40af; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .meta { display: block; color: #334155; font-size: 0.78rem; margin-top: 0.2rem; }
+    .tag {
+      display: inline-block;
+      background: #e0eaff;
+      border: 1px solid #c7d7ff;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.06rem 0.44rem;
+      margin-right: 0.35rem;
+    }
+    .spotlight-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      border-radius: 999px;
+      padding: 0.12rem 0.55rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    footer { text-align: center; color: var(--muted); font-size: 0.82rem; padding-bottom: 1.2rem; }
   </style>
 </head>
 <body>
-  <header><div class="container"><h1>My Personal Newsletter</h1><p>Top discussions in baseball, job search, and business (only headlines from the past 7 days).</p><div class="toolbar"><button id="refreshBtn">Refresh Headlines</button><span id="status">Loading...</span></div></div></header>
+  <header>
+    <div class="container">
+      <h1>My Personal Newsletter</h1>
+      <p>Top discussions in baseball, job search, and business (headlines from the past 7 days).</p>
+      <div class="toolbar">
+        <button id="refreshBtn">Refresh Headlines</button>
+        <span id="status">Loading...</span>
+      </div>
+    </div>
+  </header>
 
   <main class="container">
     <section>
       <h2>Baseball</h2>
-      <p class="section-note">Four league views. Each list merges multiple websites and keeps only the top 3 recent items from the last 7 days.</p>
+      <p class="section-note">Four league views. Each list merges many sources and keeps the top 3 most recent items from the last 7 days.</p>
       <div class="grid">
         <article class="card"><h3>MLB</h3><ul id="mlbList"><li class="muted">Loading MLB headlines...</li></ul></article>
         <article class="card"><h3>NPB</h3><ul id="npbList"><li class="muted">Loading NPB headlines...</li></ul></article>
@@ -43,107 +130,231 @@
       </div>
     </section>
 
-    <section><h2>Job Search</h2><div class="grid"><article class="card"><h3>Top Job Market Headlines</h3><ul id="jobSearchList"><li class="muted">Loading job-search headlines...</li></ul></article></div></section>
+    <section>
+      <h2>Job Search</h2>
+      <div class="grid">
+        <article class="card"><h3>Top Job Market Headlines</h3><ul id="jobSearchList"><li class="muted">Loading job-search headlines...</li></ul></article>
+      </div>
+    </section>
 
     <section>
       <h2>Business</h2>
       <div class="grid">
         <article class="card"><h3>Sports Business News</h3><ul id="sportsBizList"><li class="muted">Loading sports business headlines...</li></ul></article>
         <article class="card"><h3>General Business News</h3><ul id="businessList"><li class="muted">Loading general business headlines...</li></ul></article>
-        <article class="card"><div class="spotlight-header"><h3 id="spotlightName">Company Spotlight</h3><span class="badge">Daily Rotation</span></div><p id="spotlightIntro" class="muted"></p><p><strong>Main services:</strong> <span id="spotlightServices"></span></p><p><strong>Main revenue source:</strong> <span id="spotlightRevenue"></span></p><p class="muted" id="spotlightSource"></p></article>
+        <article class="card">
+          <div class="spotlight-header">
+            <h3 id="spotlightName">Company Spotlight</h3>
+            <span class="badge">Daily Rotation</span>
+          </div>
+          <p id="spotlightIntro" class="muted"></p>
+          <p><strong>Main services:</strong> <span id="spotlightServices"></span></p>
+          <p><strong>Main revenue source:</strong> <span id="spotlightRevenue"></span></p>
+          <p class="muted" id="spotlightSource"></p>
+        </article>
       </div>
-    </section>
-
-    <section>
-      <h2>Cool Find of the Day</h2>
-      <p class="section-note">Daily image picks + social buzz links (Instagram, X, Reddit, and PTT).</p>
-      <div class="photo-grid">
-        <figure><img id="coolImg1" alt="Cool find 1" loading="lazy" referrerpolicy="no-referrer" /><figcaption id="coolCap1"></figcaption></figure>
-        <figure><img id="coolImg2" alt="Cool find 2" loading="lazy" referrerpolicy="no-referrer" /><figcaption id="coolCap2"></figcaption></figure>
-        <figure><img id="coolImg3" alt="Cool find 3" loading="lazy" referrerpolicy="no-referrer" /><figcaption id="coolCap3"></figcaption></figure>
-      </div>
-      <article class="card" style="margin-top:.9rem"><h3>Social Buzz Headlines</h3><ul id="coolFindList"><li class="muted">Loading cool-find social headlines...</li></ul></article>
     </section>
   </main>
 
-  <footer>This page uses RSS headlines via a browser-safe proxy, uses multiple common sources (WSJ/X/Reddit/PTT/Instagram queries), and keeps items from the last 7 days.</footer>
+  <footer>
+    This page aggregates many RSS/query sources (including WSJ and Reuters) and refreshes all sections daily.
+  </footer>
 
   <script>
-    function makeRssJsonUrl(rssUrl){return `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;}
-    function isWithinLastSevenDays(dateString){const d=new Date(dateString);if(Number.isNaN(d.getTime()))return false;const now=new Date();const sevenDaysAgo=new Date(now.getTime()-7*24*60*60*1000);return d>=sevenDaysAgo&&d<=now;}
-    async function fetchFeedItems(rssUrl,sourceLabel){const r=await fetch(makeRssJsonUrl(rssUrl));if(!r.ok)throw new Error(`Failed to fetch ${sourceLabel}`);const data=await r.json();const xml=new DOMParser().parseFromString(data.contents,'text/xml');return [...xml.querySelectorAll('item')].map(item=>({title:item.querySelector('title')?.textContent?.trim()||'Untitled',link:item.querySelector('link')?.textContent?.trim()||'#',pubDate:item.querySelector('pubDate')?.textContent?.trim()||'',source:sourceLabel}));}
-    function renderHeadlines(listId,headlines){const ul=document.getElementById(listId);ul.innerHTML='';if(!headlines.length){ul.innerHTML='<li class="muted">No recent headlines in the past 7 days.</li>';return;}headlines.forEach(item=>{const li=document.createElement('li');const a=document.createElement('a');a.href=item.link;a.target='_blank';a.rel='noopener noreferrer';a.textContent=item.title;const m=document.createElement('span');m.className='meta';m.innerHTML=`<span class="tag">${item.source}</span>${item.pubDate?new Date(item.pubDate).toLocaleString():'No publish date'}`;li.appendChild(a);li.appendChild(m);ul.appendChild(li);});}
+    function makeRssJsonUrl(rssUrl) {
+      return `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+    }
 
-    const spotlightCompanies=[
-      {name:'TKO Group Holdings',intro:'TKO operates UFC and WWE and builds global live sports-entertainment franchises.',services:'Live events, premium media programming, licensing, sponsorships, consumer products.',revenue:'Media rights is typically the largest segment, followed by live events and sponsorships.',source:'Source ideas: company investor pages, SEC filings, Reuters profiles.'},
-      {name:'Live Nation Entertainment',intro:'Live Nation is a major live entertainment company focused on concerts and ticketing.',services:'Concert promotion, venues, festivals, and Ticketmaster ticketing technology.',revenue:'Concert income and ticketing service fees are core revenue drivers.',source:'Source ideas: investor site, annual reports, major financial outlets.'},
-      {name:'Endeavor Group Holdings',intro:'Endeavor is a sports and entertainment company with representation and event/media businesses.',services:'Talent management, sports rights services, events, and partnerships.',revenue:'Representation commissions, event/media economics, and partnerships.',source:'Source ideas: filings, investor presentations, Reuters and WSJ coverage.'}
+    function isWithinLastSevenDays(dateString) {
+      const d = new Date(dateString);
+      if (Number.isNaN(d.getTime())) return false;
+      const now = new Date();
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return d >= sevenDaysAgo && d <= now;
+    }
+
+    async function fetchFeedItems(rssUrl, sourceLabel) {
+      const response = await fetch(makeRssJsonUrl(rssUrl));
+      if (!response.ok) throw new Error(`Failed to fetch ${sourceLabel}`);
+      const data = await response.json();
+      const xml = new DOMParser().parseFromString(data.contents, 'text/xml');
+      return [...xml.querySelectorAll('item')].map(item => ({
+        title: item.querySelector('title')?.textContent?.trim() || 'Untitled',
+        link: item.querySelector('link')?.textContent?.trim() || '#',
+        pubDate: item.querySelector('pubDate')?.textContent?.trim() || '',
+        source: sourceLabel
+      }));
+    }
+
+    function renderHeadlines(listId, headlines) {
+      const ul = document.getElementById(listId);
+      ul.innerHTML = '';
+      if (!headlines.length) {
+        ul.innerHTML = '<li class="muted">No recent headlines in the past 7 days.</li>';
+        return;
+      }
+      headlines.forEach(item => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = item.link;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = item.title;
+        const m = document.createElement('span');
+        m.className = 'meta';
+        m.innerHTML = `<span class="tag">${item.source}</span>${item.pubDate ? new Date(item.pubDate).toLocaleString() : 'No publish date'}`;
+        li.appendChild(a);
+        li.appendChild(m);
+        ul.appendChild(li);
+      });
+    }
+
+    const spotlightCompanies = [
+      {
+        name: 'TKO Group Holdings',
+        intro: 'TKO operates UFC and WWE and builds global live sports-entertainment franchises.',
+        services: 'Live events, premium media programming, licensing, sponsorships, and consumer products.',
+        revenue: 'Media rights is typically the largest segment, followed by live events and sponsorships.',
+        source: 'Source ideas: company investor pages, SEC filings, Reuters profiles.'
+      },
+      {
+        name: 'Live Nation Entertainment',
+        intro: 'Live Nation is a major live entertainment company focused on concerts and ticketing.',
+        services: 'Concert promotion, venues, festivals, and Ticketmaster ticketing technology.',
+        revenue: 'Concert income and ticketing service fees are core revenue drivers.',
+        source: 'Source ideas: investor site, annual reports, major financial outlets.'
+      },
+      {
+        name: 'Endeavor Group Holdings',
+        intro: 'Endeavor is a sports and entertainment company with representation and event/media businesses.',
+        services: 'Talent management, sports rights services, events, and partnerships.',
+        revenue: 'Representation commissions, event/media economics, and partnerships.',
+        source: 'Source ideas: filings, investor presentations, Reuters and WSJ coverage.'
+      }
     ];
-    const dailyCoolFinds=[
-      {img:'https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=1200&q=80',cap:'<strong>Clutch play focus:</strong> Viral baseball moments and game-saving plays.'},
-      {img:'https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=1200&q=80',cap:'<strong>Gear design trend:</strong> Glove web patterns and pocket-depth tuning.'},
-      {img:'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80',cap:'<strong>Crowd atmosphere:</strong> League rivalry clips and stadium reactions.'},
-      {img:'https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&w=1200&q=80',cap:'<strong>Bullpen mechanics:</strong> Pitching clip analysis is trending.'},
-      {img:'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&w=1200&q=80',cap:'<strong>Bat tech buzz:</strong> Bat profile and swing-speed talk.'}
-    ];
 
-    function dayOfYear(){const now=new Date();const start=new Date(now.getFullYear(),0,0);return Math.floor((now-start)/(1000*60*60*24));}
-    function renderDailySpotlight(){const c=spotlightCompanies[dayOfYear()%spotlightCompanies.length];document.getElementById('spotlightName').textContent=`Company Spotlight: ${c.name}`;document.getElementById('spotlightIntro').textContent=c.intro;document.getElementById('spotlightServices').textContent=c.services;document.getElementById('spotlightRevenue').textContent=c.revenue;document.getElementById('spotlightSource').textContent=c.source;}
-    function renderDailyCoolImages(){const start=dayOfYear()%dailyCoolFinds.length;for(let i=0;i<3;i++){const item=dailyCoolFinds[(start+i)%dailyCoolFinds.length];document.getElementById(`coolImg${i+1}`).src=item.img;document.getElementById(`coolCap${i+1}`).innerHTML=item.cap;}}
+    function dayOfYear() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), 0, 0);
+      return Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    }
 
-    const feeds={
-      mlbList:[
-        {label:'Google News',url:'https://news.google.com/rss/search?q=MLB&hl=en-US&gl=US&ceid=US:en'},
-        {label:'ESPN MLB',url:'https://www.espn.com/espn/rss/mlb/news'},
-        {label:'Reddit Baseball',url:'https://www.reddit.com/r/baseball/.rss'}
+    function renderDailySpotlight() {
+      const c = spotlightCompanies[dayOfYear() % spotlightCompanies.length];
+      document.getElementById('spotlightName').textContent = `Company Spotlight: ${c.name}`;
+      document.getElementById('spotlightIntro').textContent = c.intro;
+      document.getElementById('spotlightServices').textContent = c.services;
+      document.getElementById('spotlightRevenue').textContent = c.revenue;
+      document.getElementById('spotlightSource').textContent = c.source;
+    }
+
+    const feeds = {
+      mlbList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=MLB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'ESPN MLB', url: 'https://www.espn.com/espn/rss/mlb/news' },
+        { label: 'CBS Sports MLB', url: 'https://news.google.com/rss/search?q=site:cbssports.com+MLB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Yahoo Sports MLB', url: 'https://news.google.com/rss/search?q=site:sports.yahoo.com+MLB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'The Athletic MLB', url: 'https://news.google.com/rss/search?q=site:theathletic.com+MLB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'AP MLB', url: 'https://news.google.com/rss/search?q=site:apnews.com+MLB&hl=en-US&gl=US&ceid=US:en' }
       ],
-      npbList:[
-        {label:'Google News',url:'https://news.google.com/rss/search?q=NPB+baseball&hl=en-US&gl=US&ceid=US:en'},
-        {label:'X Posts via Google',url:'https://news.google.com/rss/search?q=site:x.com+NPB+baseball&hl=en-US&gl=US&ceid=US:en'},
-        {label:'PTT NPB via Google',url:'https://news.google.com/rss/search?q=PTT+NPB&hl=en-US&gl=US&ceid=US:en'}
+      npbList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=NPB+baseball&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Japan Times NPB', url: 'https://news.google.com/rss/search?q=site:japantimes.co.jp+NPB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Kyodo NPB', url: 'https://news.google.com/rss/search?q=site:kyodonews.net+NPB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Mainichi NPB', url: 'https://news.google.com/rss/search?q=site:mainichi.jp+NPB&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'NHK NPB', url: 'https://news.google.com/rss/search?q=site:nhk.or.jp+NPB+baseball&hl=en-US&gl=US&ceid=US:en' }
       ],
-      kboList:[
-        {label:'Google News',url:'https://news.google.com/rss/search?q=KBO+League&hl=en-US&gl=US&ceid=US:en'},
-        {label:'X Posts via Google',url:'https://news.google.com/rss/search?q=site:x.com+KBO+baseball&hl=en-US&gl=US&ceid=US:en'},
-        {label:'Reddit KBO',url:'https://www.reddit.com/r/KBO/.rss'}
+      kboList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=KBO+League&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Korea JoongAng KBO', url: 'https://news.google.com/rss/search?q=site:koreajoongangdaily.joins.com+KBO&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Korea Times KBO', url: 'https://news.google.com/rss/search?q=site:koreatimes.co.kr+KBO&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Yonhap KBO', url: 'https://news.google.com/rss/search?q=site:yna.co.kr+KBO+baseball&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Naver KBO', url: 'https://news.google.com/rss/search?q=site:naver.com+KBO+baseball&hl=en-US&gl=US&ceid=US:en' }
       ],
-      cpblList:[
-        {label:'Google News',url:'https://news.google.com/rss/search?q=CPBL+baseball&hl=en-US&gl=US&ceid=US:en'},
-        {label:'PTT CPBL via Google',url:'https://news.google.com/rss/search?q=PTT+CPBL&hl=en-US&gl=US&ceid=US:en'},
-        {label:'X Posts via Google',url:'https://news.google.com/rss/search?q=site:x.com+CPBL&hl=en-US&gl=US&ceid=US:en'}
+      cpblList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=CPBL+baseball&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Focus Taiwan CPBL', url: 'https://news.google.com/rss/search?q=site:focustaiwan.tw+CPBL&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Taipei Times CPBL', url: 'https://news.google.com/rss/search?q=site:taipeitimes.com+CPBL&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'CNA CPBL', url: 'https://news.google.com/rss/search?q=site:en.cna.com.tw+CPBL&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'PTT CPBL', url: 'https://news.google.com/rss/search?q=PTT+CPBL&hl=en-US&gl=US&ceid=US:en' }
       ],
-      jobSearchList:[
-        {label:'Google News',url:'https://news.google.com/rss/search?q=job+search+career+advice&hl=en-US&gl=US&ceid=US:en'},
-        {label:'Reddit Careers',url:'https://www.reddit.com/r/careerguidance/.rss'},
-        {label:'X Job Market via Google',url:'https://news.google.com/rss/search?q=site:x.com+job+market&hl=en-US&gl=US&ceid=US:en'}
+      jobSearchList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=job+search+career+advice&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'LinkedIn Jobs', url: 'https://news.google.com/rss/search?q=site:linkedin.com+jobs+career&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Indeed Career', url: 'https://news.google.com/rss/search?q=site:indeed.com+career+advice&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Glassdoor Blog', url: 'https://news.google.com/rss/search?q=site:glassdoor.com+career+advice&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'SHRM Jobs', url: 'https://news.google.com/rss/search?q=site:shrm.org+job+market&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Reddit CareerGuidance', url: 'https://www.reddit.com/r/careerguidance/.rss' }
       ],
-      sportsBizList:[
-        {label:'Google News',url:'https://news.google.com/rss/search?q=sports+business&hl=en-US&gl=US&ceid=US:en'},
-        {label:'WSJ Sports Business',url:'https://news.google.com/rss/search?q=site:wsj.com+sports+business&hl=en-US&gl=US&ceid=US:en'},
-        {label:'Reddit SportsBiz',url:'https://www.reddit.com/r/sportsbusiness/.rss'},
-        {label:'X Sports Business via Google',url:'https://news.google.com/rss/search?q=site:x.com+sports+business&hl=en-US&gl=US&ceid=US:en'}
+      sportsBizList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=sports+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'WSJ Sports Business', url: 'https://news.google.com/rss/search?q=site:wsj.com+sports+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Sports Business Journal', url: 'https://news.google.com/rss/search?q=site:sportsbusinessjournal.com&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Sportico', url: 'https://news.google.com/rss/search?q=site:sportico.com&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Front Office Sports', url: 'https://news.google.com/rss/search?q=site:frontofficesports.com&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Bloomberg Sports Business', url: 'https://news.google.com/rss/search?q=site:bloomberg.com+sports+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'CNBC Sports Business', url: 'https://news.google.com/rss/search?q=site:cnbc.com+sports+business&hl=en-US&gl=US&ceid=US:en' }
       ],
-      businessList:[
-        {label:'Google News',url:'https://news.google.com/rss/search?q=general+business+news&hl=en-US&gl=US&ceid=US:en'},
-        {label:'Reuters',url:'https://feeds.reuters.com/reuters/businessNews'},
-        {label:'WSJ Business',url:'https://news.google.com/rss/search?q=site:wsj.com+business&hl=en-US&gl=US&ceid=US:en'},
-        {label:'Reddit Business',url:'https://www.reddit.com/r/business/.rss'}
-      ],
-      coolFindList:[
-        {label:'Instagram via Google',url:'https://news.google.com/rss/search?q=site:instagram.com+baseball+highlight&hl=en-US&gl=US&ceid=US:en'},
-        {label:'X Baseball via Google',url:'https://news.google.com/rss/search?q=site:x.com+baseball+highlight&hl=en-US&gl=US&ceid=US:en'},
-        {label:'Reddit Baseball',url:'https://www.reddit.com/r/baseball/.rss'},
-        {label:'PTT Baseball via Google',url:'https://news.google.com/rss/search?q=PTT+baseball&hl=en-US&gl=US&ceid=US:en'}
+      businessList: [
+        { label: 'Google News', url: 'https://news.google.com/rss/search?q=general+business+news&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Reuters', url: 'https://feeds.reuters.com/reuters/businessNews' },
+        { label: 'WSJ Business', url: 'https://news.google.com/rss/search?q=site:wsj.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Bloomberg Business', url: 'https://news.google.com/rss/search?q=site:bloomberg.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Financial Times', url: 'https://news.google.com/rss/search?q=site:ft.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'CNBC Business', url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10001147' },
+        { label: 'Fortune', url: 'https://news.google.com/rss/search?q=site:fortune.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Forbes', url: 'https://news.google.com/rss/search?q=site:forbes.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'AP Business', url: 'https://news.google.com/rss/search?q=site:apnews.com+business&hl=en-US&gl=US&ceid=US:en' }
       ]
     };
 
-    async function refreshAllHeadlines(){const status=document.getElementById('status');status.textContent='Refreshing headlines...';const jobs=Object.entries(feeds).map(async([listId,sourceList])=>{try{const grouped=await Promise.all(sourceList.map(s=>fetchFeedItems(s.url,s.label)));const merged=grouped.flat();const seen=new Set();const filtered=[];for(const item of merged){const key=`${item.title}|${item.link}`;if(!seen.has(key)&&isWithinLastSevenDays(item.pubDate)){seen.add(key);filtered.push(item);}}filtered.sort((a,b)=>new Date(b.pubDate)-new Date(a.pubDate));renderHeadlines(listId,filtered.slice(0,3));}catch(error){console.error(`Feed error for ${listId}:`,error);renderHeadlines(listId,[]);}});await Promise.all(jobs);status.textContent=`Last updated: ${new Date().toLocaleString()} (past 7 days only, daily rotation enabled)`;}
+    async function refreshAllHeadlines() {
+      const status = document.getElementById('status');
+      status.textContent = 'Refreshing headlines...';
+      const jobs = Object.entries(feeds).map(async ([listId, sourceList]) => {
+        try {
+          const grouped = await Promise.all(sourceList.map(s => fetchFeedItems(s.url, s.label)));
+          const merged = grouped.flat();
+          const seen = new Set();
+          const filtered = [];
+          for (const item of merged) {
+            const key = `${item.title}|${item.link}`;
+            if (!seen.has(key) && isWithinLastSevenDays(item.pubDate)) {
+              seen.add(key);
+              filtered.push(item);
+            }
+          }
+          filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+          renderHeadlines(listId, filtered.slice(0, 3));
+        } catch (error) {
+          console.error(`Feed error for ${listId}:`, error);
+          renderHeadlines(listId, []);
+        }
+      });
+      await Promise.all(jobs);
+      status.textContent = `Last updated: ${new Date().toLocaleString()} (past 7 days only, daily refresh enabled)`;
+    }
 
-    function scheduleDailyRefresh(){const now=new Date();const next=new Date(now);next.setHours(24,0,5,0);setTimeout(()=>{renderDailySpotlight();renderDailyCoolImages();refreshAllHeadlines();setInterval(()=>{renderDailySpotlight();renderDailyCoolImages();refreshAllHeadlines();},24*60*60*1000);},next-now);}
+    function scheduleDailyRefresh() {
+      const now = new Date();
+      const next = new Date(now);
+      next.setHours(24, 0, 5, 0);
+      setTimeout(() => {
+        renderDailySpotlight();
+        refreshAllHeadlines();
+        setInterval(() => {
+          renderDailySpotlight();
+          refreshAllHeadlines();
+        }, 24 * 60 * 60 * 1000);
+      }, next - now);
+    }
 
-    document.getElementById('refreshBtn').addEventListener('click',()=>{renderDailySpotlight();renderDailyCoolImages();refreshAllHeadlines();});
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      renderDailySpotlight();
+      refreshAllHeadlines();
+    });
+
     renderDailySpotlight();
-    renderDailyCoolImages();
     refreshAllHeadlines();
     scheduleDailyRefresh();
   </script>
