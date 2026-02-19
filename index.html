@@ -141,7 +141,7 @@
   <header>
     <div class="container">
       <h1>My Personal Newsletter</h1>
-      <p>Top discussions in baseball, job search, and business (only headlines from the past 3 days).</p>
+      <p>Top discussions in baseball, job search, and business (only headlines from the past 7 days).</p>
       <div class="toolbar">
         <button id="refreshBtn">Refresh Headlines</button>
         <span id="status">Loading...</span>
@@ -152,7 +152,7 @@
   <main class="container">
     <section>
       <h2>Baseball</h2>
-      <p class="section-note">Four league views. Each list merges multiple websites and keeps only the top 3 most recent items.</p>
+      <p class="section-note">Four league views. Each list merges multiple websites and keeps only the top 3 most recent items from the last 7 days.</p>
       <div class="grid">
         <article class="card"><h3>MLB</h3><ul id="mlbList"><li class="muted">Loading MLB headlines...</li></ul></article>
         <article class="card"><h3>NPB</h3><ul id="npbList"><li class="muted">Loading NPB headlines...</li></ul></article>
@@ -207,7 +207,7 @@
   </main>
 
   <footer>
-    This page uses RSS headlines via a browser-safe proxy and only keeps items from the last 3 days.
+    This page uses RSS headlines via a browser-safe proxy and only keeps items from the last 7 days.
   </footer>
 
   <script>
@@ -216,12 +216,12 @@
       return `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
     }
 
-    // Return true when a publish date is within the last 3 days.
-    function isWithinLastThreeDays(dateString) {
+    // Return true when a publish date is within the last 7 days.
+    function isWithinLastSevenDays(dateString) {
       const date = new Date(dateString);
       if (Number.isNaN(date.getTime())) return false;
       const now = new Date();
-      const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
+      const threeDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       return date >= threeDaysAgo && date <= now;
     }
 
@@ -246,7 +246,7 @@
       ul.innerHTML = '';
 
       if (!headlines.length) {
-        ul.innerHTML = '<li class="muted">No recent headlines in the past 3 days.</li>';
+        ul.innerHTML = '<li class="muted">No recent headlines in the past 7 days.</li>';
         return;
       }
 
@@ -331,11 +331,13 @@
       ],
       sportsBizList: [
         { label: 'Google News', url: 'https://news.google.com/rss/search?q=sports+business&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'Google Sportico', url: 'https://news.google.com/rss/search?q=Sportico+sports+business&hl=en-US&gl=US&ceid=US:en' }
+        { label: 'Google Sportico', url: 'https://news.google.com/rss/search?q=Sportico+sports+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'WSJ Sports Business', url: 'https://news.google.com/rss/search?q=site:wsj.com+sports+business&hl=en-US&gl=US&ceid=US:en' }
       ],
       businessList: [
         { label: 'Google News', url: 'https://news.google.com/rss/search?q=general+business+news&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'Reuters', url: 'https://feeds.reuters.com/reuters/businessNews' }
+        { label: 'Reuters', url: 'https://feeds.reuters.com/reuters/businessNews' },
+        { label: 'WSJ Business', url: 'https://news.google.com/rss/search?q=site:wsj.com+business&hl=en-US&gl=US&ceid=US:en' }
       ]
     };
 
@@ -352,7 +354,7 @@
           const filtered = [];
           for (const item of merged) {
             const key = `${item.title}|${item.link}`;
-            if (!seen.has(key) && isWithinLastThreeDays(item.pubDate)) {
+            if (!seen.has(key) && isWithinLastSevenDays(item.pubDate)) {
               seen.add(key);
               filtered.push(item);
             }
@@ -367,7 +369,7 @@
       });
 
       await Promise.all(jobs);
-      status.textContent = `Last updated: ${new Date().toLocaleString()} (past 3 days only)`;
+      status.textContent = `Last updated: ${new Date().toLocaleString()} (past 7 days only)`;
     }
 
     document.getElementById('refreshBtn').addEventListener('click', refreshAllHeadlines);
