@@ -196,13 +196,26 @@
           if (!xmlText.trim()) throw new Error('Empty feed payload');
 
           const xml = new DOMParser().parseFromString(xmlText, 'text/xml');
-          const items = [...xml.querySelectorAll('item')].map(item => ({
+
+          // Support both RSS (<item>) and Atom (<entry>) feeds.
+          const rssItems = [...xml.querySelectorAll('item')].map(item => ({
             title: item.querySelector('title')?.textContent?.trim() || 'Untitled',
             link: item.querySelector('link')?.textContent?.trim() || '#',
             pubDate: item.querySelector('pubDate')?.textContent?.trim() || '',
             source: sourceLabel
           }));
 
+          const atomItems = [...xml.querySelectorAll('entry')].map(entry => ({
+            title: entry.querySelector('title')?.textContent?.trim() || 'Untitled',
+            link: entry.querySelector('link')?.getAttribute('href') || '#',
+            pubDate:
+              entry.querySelector('published')?.textContent?.trim() ||
+              entry.querySelector('updated')?.textContent?.trim() ||
+              '',
+            source: sourceLabel
+          }));
+
+          const items = [...rssItems, ...atomItems].filter(item => item.link && item.link !== '#');
           if (items.length) return items;
         } catch (error) {
           lastError = error;
@@ -325,14 +338,15 @@
       ],
       businessList: [
         { label: 'Google News', url: 'https://news.google.com/rss/search?q=general+business+news&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'Reuters', url: 'https://feeds.reuters.com/reuters/businessNews' },
-        { label: 'WSJ Business', url: 'https://news.google.com/rss/search?q=site:wsj.com+business&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'Bloomberg Business', url: 'https://news.google.com/rss/search?q=site:bloomberg.com+business&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'Financial Times', url: 'https://news.google.com/rss/search?q=site:ft.com+business&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'CNBC Business', url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10001147' },
-        { label: 'Fortune', url: 'https://news.google.com/rss/search?q=site:fortune.com+business&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'Forbes', url: 'https://news.google.com/rss/search?q=site:forbes.com+business&hl=en-US&gl=US&ceid=US:en' },
-        { label: 'AP Business', url: 'https://news.google.com/rss/search?q=site:apnews.com+business&hl=en-US&gl=US&ceid=US:en' }
+        { label: 'Reuters Business', url: 'https://feeds.reuters.com/reuters/businessNews' },
+        { label: 'NYTimes Business', url: 'https://rss.nytimes.com/services/xml/rss/nyt/Business.xml' },
+        { label: 'BBC Business', url: 'https://feeds.bbci.co.uk/news/business/rss.xml' },
+        { label: 'MarketWatch Top Stories', url: 'https://feeds.marketwatch.com/marketwatch/topstories/' },
+        { label: 'CNBC Top News', url: 'https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114' },
+        { label: 'WSJ Business (Google index)', url: 'https://news.google.com/rss/search?q=site:wsj.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Bloomberg Business (Google index)', url: 'https://news.google.com/rss/search?q=site:bloomberg.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'Financial Times (Google index)', url: 'https://news.google.com/rss/search?q=site:ft.com+business&hl=en-US&gl=US&ceid=US:en' },
+        { label: 'AP Business (Google index)', url: 'https://news.google.com/rss/search?q=site:apnews.com+business&hl=en-US&gl=US&ceid=US:en' }
       ]
     };
 
