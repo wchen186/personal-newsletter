@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Newsletter</title>
+  <style>
+    /* Basic page styling for readability */
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --border: #dbe3ef;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+    }
+
+    header {
+      background: #0f172a;
+      color: #fff;
+      padding: 1.25rem;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    header p {
+      margin: 0.35rem 0 0;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.55rem 0.9rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    button:hover { background: #1d4ed8; }
+
+    #status {
+      color: #e2e8f0;
+      font-size: 0.9rem;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 1rem auto 2rem;
+      padding: 0 1rem;
+    }
+
+    section {
+      margin-bottom: 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    section h2 {
+      margin-top: 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fcfdff;
+      padding: 0.8rem;
+    }
+
+    .card h3 {
+      margin: 0 0 0.45rem;
+      font-size: 1rem;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.15rem;
+    }
+
+    li { margin-bottom: 0.35rem; }
+
+    a {
+      color: #1d4ed8;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .muted {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.9rem;
+    }
+
+    figure {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    figure img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    figcaption {
+      padding: 0.65rem;
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Personal Newsletter</h1>
+    <p>Top discussions in baseball, business, job search, and cool finds.</p>
+    <div class="toolbar">
+      <button id="refreshBtn">Refresh Headlines</button>
+      <span id="status">Loading...</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Section 1: Baseball news divided into four leagues -->
+    <section>
+      <h2>Baseball</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>MLB</h3>
+          <ul id="mlbList"><li class="muted">Loading MLB headlines...</li></ul>
+        </article>
+        <article class="card">
+          <h3>NPB</h3>
+          <ul id="npbList"><li class="muted">Loading NPB headlines...</li></ul>
+        </article>
+        <article class="card">
+          <h3>KBO</h3>
+          <ul id="kboList"><li class="muted">Loading KBO headlines...</li></ul>
+        </article>
+        <article class="card">
+          <h3>CPBL</h3>
+          <ul id="cpblList"><li class="muted">Loading CPBL headlines...</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Section 2: Job Search topic with top discussion headlines -->
+    <section>
+      <h2>Job Search</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Top Job Market Headlines</h3>
+          <ul id="jobSearchList"><li class="muted">Loading job-search headlines...</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Section 3: Business section with requested three parts -->
+    <section>
+      <h2>Business</h2>
+      <div class="grid">
+        <article class="card">
+          <h3>Sports Business News</h3>
+          <ul id="sportsBizList"><li class="muted">Loading sports business headlines...</li></ul>
+        </article>
+        <article class="card">
+          <h3>General Business News</h3>
+          <ul id="businessList"><li class="muted">Loading general business headlines...</li></ul>
+        </article>
+        <article class="card">
+          <h3>Company Spotlight: TKO Group Holdings</h3>
+          <p><strong>What they do:</strong> TKO owns UFC and WWE, creating live sports and entertainment events, TV shows, and premium streaming content.</p>
+          <p><strong>Main services:</strong> Fight cards, pro wrestling events, media rights programming, global licensing, sponsorships, and ticketed live events.</p>
+          <p><strong>Main revenue sources:</strong> Media rights deals, live event ticket sales, sponsorship/advertising, and consumer products.</p>
+          <p class="muted">Tip: You can swap this section to another sports or entertainment company later.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Section 4: Cool find of the day with three static image highlights -->
+    <section>
+      <h2>Cool Find of the Day</h2>
+      <p class="muted">These are notable baseball-related finds with discussion value online.</p>
+      <div class="photo-grid">
+        <figure>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Shohei_Ohtani_batting_2024.jpg" alt="Shohei Ohtani batting" />
+          <figcaption><strong>Global star spotlight:</strong> Shohei Ohtani clips are still heavily shared for elite two-way legacy discussions.</figcaption>
+        </figure>
+        <figure>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/c/c5/Baseball_glove.jpg" alt="Modern baseball glove" />
+          <figcaption><strong>Gear trend:</strong> New glove web patterns and custom pocket depths are a frequent debate among players and fans.</figcaption>
+        </figure>
+        <figure>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/World_Baseball_Classic_2023.jpg" alt="World Baseball Classic game" />
+          <figcaption><strong>Viral play conversations:</strong> International tournament moments keep resurfacing as benchmark highlights.</figcaption>
+        </figure>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Helper: Build a CORS-friendly URL from an RSS feed using allorigins.
+    function makeRssJsonUrl(rssUrl) {
+      return `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+    }
+
+    // Helper: Fetch RSS data, parse XML from text, and return top 3 items.
+    async function fetchTopThreeFromRss(rssUrl) {
+      const response = await fetch(makeRssJsonUrl(rssUrl));
+      if (!response.ok) throw new Error('Unable to fetch RSS proxy data.');
+
+      const data = await response.json();
+      const xmlText = data.contents;
+      const xmlDoc = new DOMParser().parseFromString(xmlText, 'text/xml');
+      const items = [...xmlDoc.querySelectorAll('item')].slice(0, 3);
+
+      return items.map(item => ({
+        title: item.querySelector('title')?.textContent || 'Untitled',
+        link: item.querySelector('link')?.textContent || '#'
+      }));
+    }
+
+    // Helper: Render a list of headlines to a target UL element.
+    function renderHeadlines(listId, headlines) {
+      const ul = document.getElementById(listId);
+      ul.innerHTML = '';
+
+      if (!headlines.length) {
+        ul.innerHTML = '<li class="muted">No headlines available right now.</li>';
+        return;
+      }
+
+      headlines.forEach(item => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = item.link;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = item.title;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+    }
+
+    // Feed map: you can change the query terms if you want different results.
+    const feeds = {
+      mlbList: 'https://news.google.com/rss/search?q=MLB&hl=en-US&gl=US&ceid=US:en',
+      npbList: 'https://news.google.com/rss/search?q=NPB+baseball&hl=en-US&gl=US&ceid=US:en',
+      kboList: 'https://news.google.com/rss/search?q=KBO+League&hl=en-US&gl=US&ceid=US:en',
+      cpblList: 'https://news.google.com/rss/search?q=CPBL+baseball&hl=en-US&gl=US&ceid=US:en',
+      jobSearchList: 'https://news.google.com/rss/search?q=job+search+career+advice&hl=en-US&gl=US&ceid=US:en',
+      sportsBizList: 'https://news.google.com/rss/search?q=sports+business&hl=en-US&gl=US&ceid=US:en',
+      businessList: 'https://news.google.com/rss/search?q=general+business+news&hl=en-US&gl=US&ceid=US:en'
+    };
+
+    // Main refresh function called on page load and button click.
+    async function refreshAllHeadlines() {
+      const status = document.getElementById('status');
+      status.textContent = 'Refreshing headlines...';
+
+      const jobs = Object.entries(feeds).map(async ([listId, url]) => {
+        try {
+          const headlines = await fetchTopThreeFromRss(url);
+          renderHeadlines(listId, headlines);
+        } catch (error) {
+          renderHeadlines(listId, []);
+          console.error(`Failed for ${listId}:`, error);
+        }
+      });
+
+      await Promise.all(jobs);
+      status.textContent = `Last updated: ${new Date().toLocaleString()}`;
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', refreshAllHeadlines);
+
+    // Load headlines immediately when page opens.
+    refreshAllHeadlines();
+  </script>
+</body>
+</html>
